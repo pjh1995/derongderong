@@ -18,7 +18,7 @@ export function useFaceApi(configuration: IFaceApiConfiguration) {
   const [faces, setFaces] = useState<faceapi.FaceDetection[]>([]);
   const {
     input,
-    modelUrl = '../models',
+    modelUrl = '/models',
     useFaceLandMarks = false,
     useAgeGenderModel = false,
     useFaceExpressionModel = false,

@@ -120,17 +120,17 @@ i {
 }
 
 i.candy1 {
-  background-image: url('./assets/candy1.png');
+  background-image: url('./assets/images/candy1.png');
 }
 i.candy2 {
-  background-image: url('./assets/candy2.png');
+  background-image: url('./assets/images/candy2.png');
 }
 i.candy3 {
-  background-image: url('./assets/candy3.png');
+  background-image: url('./assets/images/candy3.png');
 }
 i.candy4 {
-  background-image: url('./assets/candy4.png');
+  background-image: url('./assets/images/candy4.png');
 }
 i.candy5 {
-  background-image: url('./assets/candy5.png');
+  background-image: url('./assets/images/candy5.png');
 }

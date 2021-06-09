@@ -1,5 +1,6 @@
 import { useFaceApi } from '../hooks/useFaceApi';
 import { useEffect } from 'react';
+import React from 'react';
 
 const myFaceApiConfig = {
   input: 'my-image',
