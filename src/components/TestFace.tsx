@@ -4,7 +4,14 @@ import * as faceapi from 'face-api.js';
 const TestFace = (): ReactElement => {
   // state
   const [displaySize, setDisplaySize] = useState<{ width: number; height: number }>({ width: 1280, height: 1270 });
-
+  const [st, setSt] = useState<any>({
+    position: 'absolute',
+    backgroundColor: 'red',
+    top: '430.07251739501953px',
+    left: '519.0542984008789px',
+    width: '178.27983856201172px',
+    height: '117.10082530975342px',
+  });
   // refs
   const videoEl = useRef<HTMLVideoElement>(null);
   const canvasEl = useRef<HTMLCanvasElement>(null);
@@ -55,33 +62,69 @@ const TestFace = (): ReactElement => {
   const detect = async () => {
     const landmarks1 = await faceapi.detectFaceLandmarks('idid');
     console.log(landmarks1);
-    if ('imageHeight' in landmarks1) console.log(landmarks1.imageHeight);
-    if ('getMouth' in landmarks1) console.log(landmarks1.getMouth());
-    detect();
+    if ('getMouth' in landmarks1) {
+      const mouthPosition = landmarks1.getMouth();
+
+      const max = {
+        x: Math.max(...mouthPosition.map((o) => o.x)),
+        y: Math.max(...mouthPosition.map((o) => o.y)),
+      };
+      const min = {
+        x: Math.min(...mouthPosition.map((o) => o.x)),
+        y: Math.min(...mouthPosition.map((o) => o.y)),
+      };
+
+      setSt({
+        ...st,
+        top: `${min.y}px`,
+        left: `${min.x}px`,
+        width: `${max.x - min.x}px`,
+        height: `${max.y - min.y}px`,
+      });
+
+      const a = document.querySelector('.candy1');
+      if (a) {
+        const b: {
+          x: number;
+          y: number;
+        } = a.getBoundingClientRect();
+        if (min.x <= b.x && b.x <= max.x && min.y <= b.y && b.y <= max.y) {
+          console.log('먹었따!');
+        }
+      }
+      console.log(max, min);
+      // console.log(landmarks1.getMouth());
+    }
+    setTimeout(() => {
+      detect();
+    }, 3000);
   };
   const onPlay = async (): Promise<void> => {
     if (videoEl.current && videoEl.current.srcObject) {
       console.log(videoEl.current.srcObject);
       // const detection = await faceapi.detectSingleFace('idid'); // where error cames
 
-      // detect();
+      detect();
     }
   };
 
   return (
-    <>
-      <div>
-        <div>
-          <div>
-            <>
-              <video ref={videoEl} width="1280" height="760" id="idid" onPlay={onPlay} muted playsInline autoPlay />
-              <canvas id="overlay" ref={canvasEl}></canvas>
-              <canvas id="capture" width="224" height="224" ref={captureEl}></canvas>
-            </>
-          </div>
-        </div>
-      </div>
-    </>
+    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+      <video
+        ref={videoEl}
+        width="1280"
+        height="760"
+        id="idid"
+        onPlay={onPlay}
+        muted
+        playsInline
+        autoPlay
+        style={{ position: 'fixed', top: 0, left: 0 }}
+      />
+      <canvas id="overlay" ref={canvasEl}></canvas>
+      <canvas id="capture" width="224" height="224" ref={captureEl}></canvas>
+      <div style={st}>sss</div>
+    </div>
   );
 };
 

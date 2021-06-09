@@ -67,9 +67,9 @@ const bounce = keyframes`
 const WrapCandy = styled.div`
   position: absolute;
   width: fit-content;
-  height: 30%;
+  height: 60%;
   top: 0;
-  left: 30%;
+  left: 70%;
   font-size: 0.8em;
   text-align: center;
   background-color: #111;
