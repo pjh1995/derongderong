@@ -1,5 +1,17 @@
 import styled, { keyframes } from 'styled-components';
 
+const Candy = () => {
+  return (
+    <WrapCandy>
+      <div className="rope" />
+      <div className="candy">
+        <i className="candy1"></i>
+      </div>
+    </WrapCandy>
+  );
+};
+export default Candy;
+
 const bounce = keyframes`
     0% {
       transform:translateY(-100%);
@@ -63,7 +75,6 @@ const WrapCandy = styled.div`
   color: #fff;
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
   text-transform: uppercase;
-  position: relative;
   font-weight: bold;
   animation: ${bounce} 1.8s ease-out;
 
@@ -83,15 +94,3 @@ const WrapCandy = styled.div`
     }
   }
 `;
-
-const Candy = () => {
-  return (
-    <WrapCandy>
-      <div className="rope">rope</div>
-      <div className="candy">
-        <i className="candy1"></i>
-      </div>
-    </WrapCandy>
-  );
-};
-export default Candy;
