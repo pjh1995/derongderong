@@ -1,6 +1,7 @@
-import React, { ReactElement, useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // import * as tf from '@tensorflow/tfjs';
 import styled from 'styled-components';
+import { displaySize, detectTime } from '../assets/constant';
 
 import * as faceapi from 'face-api.js';
 import { usePositionContext } from '../Contexts/PositionContext';
@@ -8,7 +9,7 @@ import { usePositionContext } from '../Contexts/PositionContext';
 const DetectFace = ({ setIsLoading, isLoading }) => {
   // state
   const { setPosition } = usePositionContext();
-  const [displaySize, setDisplaySize] = useState({ width: 800, height: 600 });
+
   const [st, setSt] = useState({
     position: 'absolute',
     backgroundColor: 'red',
@@ -22,6 +23,7 @@ const DetectFace = ({ setIsLoading, isLoading }) => {
   const videoEl = useRef(null);
   const canvasEl = useRef(null);
 
+  let detectMouth = null;
   // effects
   useEffect(() => {
     async function load() {
@@ -30,6 +32,7 @@ const DetectFace = ({ setIsLoading, isLoading }) => {
       });
     }
     load();
+    return clearInterval(detectMouth);
   }, []);
 
   const loadFaceApiModels = async () => {
@@ -51,7 +54,7 @@ const DetectFace = ({ setIsLoading, isLoading }) => {
 
   const loadCam = () => {
     navigator.mediaDevices
-      .getUserMedia({ video: { width: displaySize.width, height: displaySize.height } })
+      .getUserMedia({ video: displaySize })
       .then((stream) => {
         if (videoEl.current) {
           videoEl.current.srcObject = stream;
@@ -63,15 +66,13 @@ const DetectFace = ({ setIsLoading, isLoading }) => {
   };
 
   const detect = async () => {
-    // faceapi.matchDimensions(videoEl.current, displaySize);
-
     const canvas = faceapi.createCanvasFromMedia(videoEl.current);
     canvas.style.cssText = 'position:fixed; top:0; left: 0;';
     document.body.append(canvas);
 
     faceapi.matchDimensions(canvas, displaySize);
 
-    setInterval(async () => {
+    detectMouth = setInterval(async () => {
       const detections = await faceapi
         .detectAllFaces(videoEl.current, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks()
@@ -84,14 +85,14 @@ const DetectFace = ({ setIsLoading, isLoading }) => {
       const resizedDetections = faceapi.resizeResults(detections, displaySize);
 
       if (canvas) {
-        canvas.getContext('2d').clearRect(0, 0, videoEl.current.width, videoEl.current.height);
+        canvas.getContext('2d').clearRect(0, 0, displaySize.width, displaySize.height);
         faceapi.draw.drawDetections(canvas, resizedDetections);
         faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
         faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
       }
 
       const mouth = landmarks.getMouth();
-      console.log(mouth);
+
       const max = {
         x: Math.max(...mouth.map((o) => o.x)),
         y: Math.max(...mouth.map((o) => o.y)),
@@ -110,8 +111,9 @@ const DetectFace = ({ setIsLoading, isLoading }) => {
       });
 
       setPosition({ max, min });
-    }, 2000);
+    }, detectTime);
   };
+
   const onPlay = async () => {
     if (videoEl.current && videoEl.current.srcObject) {
       console.log(videoEl.current.srcObject);
@@ -121,15 +123,21 @@ const DetectFace = ({ setIsLoading, isLoading }) => {
   };
 
   return (
-    <div style={{ width: '800px', height: '600px', position: 'relative' }}>
-      <WrapVideo ref={videoEl} id="idid" width={800} height={600} onPlay={onPlay} muted playsInline autoPlay />
+    <WrapDetectFace>
+      <WrapVideo ref={videoEl} id="idid" onPlay={onPlay} muted playsInline autoPlay />
       <WrapCanvas id="capture" ref={canvasEl}></WrapCanvas>
       <div style={st}>sss</div>
-    </div>
+    </WrapDetectFace>
   );
 };
 
 export default DetectFace;
+
+const WrapDetectFace = styled.div`
+  width: ${displaySize.width}px;
+  height: ${displaySize.height}px;
+  position: 'relative';
+`;
 
 const WrapCanvas = styled.canvas`
   width: 100%;

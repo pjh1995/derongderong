@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import styled, { keyframes, css } from 'styled-components';
+import React from 'react';
+import styled from 'styled-components';
+
+import { displaySize } from '../assets/constant';
 
 const StartButton = ({ onClick, isPlaying, disabled }) => {
   return (
@@ -15,7 +17,7 @@ export default StartButton;
 
 const Button = styled.button`
   position: fixed;
-  top: 600px;
+  top: ${displaySize.height}px;
   left: 0;
   width: fit-content;
   height: fit-content;

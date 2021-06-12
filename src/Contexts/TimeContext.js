@@ -1,9 +1,10 @@
 import { createContext, useContext, useState } from 'react';
+import { initTime } from '../assets/constant';
 
 export const TimeContext = createContext(undefined);
 
 export function TimeContextProvider({ children }) {
-  const [time, setTime] = useState(30);
+  const [time, setTime] = useState(initTime);
 
   const value = {
     time,

@@ -1,12 +1,14 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useTimeContext } from '../Contexts/TimeContext';
 
 import sound from '../assets/audios/snack_eating_sound.mp3';
+import { makeCandyDelay } from '../assets/constant';
 
 import Candy from './Candy';
 
-const CandyList = ({ isPlaying }) => {
+const CandyList = ({ isPlaying, setScore }) => {
   const [candyList, setCandyList] = useState([]);
-  const [max, setMax] = useState(3000);
+  const { setTime } = useTimeContext();
   const audio = new Audio(sound);
 
   let idx = 0;
@@ -16,23 +18,26 @@ const CandyList = ({ isPlaying }) => {
   }, [candyList, isPlaying]);
 
   const makeCandy = useCallback(() => {
-    if (max <= 0) return false;
     ++idx;
     const list = candyList;
     list.push(idx);
     setCandyList(list);
-    console.log(candyList, '@@@@@@', max);
-    setMax(max - 10);
     setTimeout(() => {
       makeCandy();
-    }, max);
-  }, [candyList, idx, max]);
+    }, makeCandyDelay);
+  }, [candyList, idx]);
 
   const onEating = (id) => {
     if (audio) {
       audio.play();
     }
     setCandyList(candyList.filter((candyId) => candyId !== id));
+    increaseSeconds(1);
+    setScore((score) => score + 10);
+  };
+
+  const increaseSeconds = (extra) => {
+    setTime((seconds) => seconds + extra);
   };
 
   return <>{candyList.length > 0 && candyList.map((id) => <Candy key={id} id={id} onEating={onEating} />)}</>;

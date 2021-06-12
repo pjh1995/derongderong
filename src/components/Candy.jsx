@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import styled, { keyframes, css } from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
+import { displaySize } from '../assets/constant';
 import { usePositionContext } from '../Contexts/PositionContext';
 
 const Candy = ({ onEating, id }) => {
@@ -15,8 +16,8 @@ const Candy = ({ onEating, id }) => {
 
   useEffect(() => {
     if (state.cookie < 0) {
-      const height = getRandomArbitrary(200, 400);
-      const left = getRandomArbitrary(200, 600);
+      const height = getRandomArbitrary(200, displaySize.height - 400);
+      const left = getRandomArbitrary(200, displaySize.width - 300);
       const cookie = getRandomArbitrary(1, 5);
       setstate({
         height,
@@ -26,15 +27,12 @@ const Candy = ({ onEating, id }) => {
     }
 
     if (candyEl && candyEl.current) {
-      console.log('@@@@@@', id, '캔디!', position);
       if (
         position.min.x <= state.left &&
         state.left <= position.max.x &&
         position.min.y <= state.height &&
         state.height <= position.max.y
       ) {
-        console.log('먹었따!..?');
-
         onEating(id);
       }
     }

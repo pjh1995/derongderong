@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
 
-const Timer = (props) => {
-  const { initialSeconds = 0, isLoading = false, endGame } = props;
-  const [seconds, setSeconds] = useState(initialSeconds);
-  const [timer, setTimer] = useState(null);
+import { useTimeContext } from '../Contexts/TimeContext';
 
-  const increaseSeconds = (extra) => {
-    setSeconds((seconds) => seconds + extra);
-  };
+const Timer = (props) => {
+  const { isLoading = false, endGame } = props;
+  const { time, setTime } = useTimeContext();
+  const [_, setTimer] = useState(null);
 
   const decreaseSeconds = () => {
-    setSeconds((seconds) => seconds - 1);
+    setTime((seconds) => seconds - 1);
   };
 
   useEffect(() => {
-    if (seconds === 0) {
+    if (time === 0) {
       endGame();
       return;
     }
@@ -29,7 +27,7 @@ const Timer = (props) => {
 
   return (
     <div>
-      <h1>00:{seconds < 10 ? `0${seconds}` : seconds}</h1>
+      <h1>00:{time < 10 ? `0${time}` : time}</h1>
     </div>
   );
 };
