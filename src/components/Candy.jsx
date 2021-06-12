@@ -1,14 +1,58 @@
-import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import React, { useState, useEffect, useRef } from 'react';
+import styled, { keyframes, css } from 'styled-components';
 
-const Candy = () => {
-  return (
-    <WrapCandy>
+import { usePositionContext } from '../Contexts/PositionContext';
+
+const Candy = ({ onRemove, id }) => {
+  const { position } = usePositionContext();
+  const candyEl = useRef(null);
+
+  const [state, setstate] = useState({
+    height: 0,
+    left: 0,
+    cookie: -1,
+  });
+
+  useEffect(() => {
+    if (state.cookie < 0) {
+      const height = getRandomArbitrary(50, 550);
+      const left = getRandomArbitrary(50, 750);
+      const cookie = getRandomArbitrary(1, 5);
+      setstate({
+        height,
+        left,
+        cookie,
+      });
+    }
+
+    if (candyEl && candyEl.current) {
+      console.log('@@@@@@', id, '캔디!', position);
+      if (
+        position.min.x <= state.left &&
+        state.left <= position.max.x &&
+        position.min.y <= state.height &&
+        state.height <= position.max.y
+      ) {
+        console.log('먹었따!..?');
+
+        onRemove(id);
+      }
+    }
+  }, [position]);
+
+  function getRandomArbitrary(min, max) {
+    return Math.floor(Math.random() * (max - 1 - min)) + min;
+  }
+
+  return state.cookie > 0 ? (
+    <WrapCandy {...state} ref={candyEl}>
       <div className="rope" />
       <div className="candy">
-        <i className="candy1"></i>
+        <i className={`candy${state.cookie}`}></i>
       </div>
     </WrapCandy>
+  ) : (
+    <></>
   );
 };
 export default Candy;
@@ -67,9 +111,9 @@ const bounce = keyframes`
 const WrapCandy = styled.div`
   position: absolute;
   width: fit-content;
-  height: 60%;
+  height: ${({ height }) => `${height}px`};
+  left: ${({ left }) => `${left}px`};
   top: 0;
-  left: 70%;
   font-size: 0.8em;
   text-align: center;
   background-color: #111;
