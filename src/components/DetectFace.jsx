@@ -5,9 +5,8 @@ import styled from 'styled-components';
 import * as faceapi from 'face-api.js';
 import { usePositionContext } from '../Contexts/PositionContext';
 
-const TestFace = () => {
+const DetectFace = ({ setIsLoading, isLoading }) => {
   // state
-
   const { setPosition } = usePositionContext();
   const [displaySize, setDisplaySize] = useState({ width: 800, height: 600 });
   const [st, setSt] = useState({
@@ -54,7 +53,6 @@ const TestFace = () => {
     navigator.mediaDevices
       .getUserMedia({ video: { width: displaySize.width, height: displaySize.height } })
       .then((stream) => {
-        // setIsLoading(false);
         if (videoEl.current) {
           videoEl.current.srcObject = stream;
         }
@@ -80,6 +78,7 @@ const TestFace = () => {
         .withFaceExpressions();
       const landmarks = detections[0]?.landmarks;
 
+      if (isLoading) setIsLoading(false);
       if (!landmarks) return;
 
       const resizedDetections = faceapi.resizeResults(detections, displaySize);
@@ -111,11 +110,6 @@ const TestFace = () => {
       });
 
       setPosition({ max, min });
-      console.log(max, '@@@@@@', min);
-      //   const { x, y } = canvasEl.current.getBoundingClientRect();
-      //   if (min.x <= x && x <= max.x && min.y <= y && y <= max.y) {
-      //     console.log('먹었따!');
-      //   }
     }, 2000);
   };
   const onPlay = async () => {
@@ -135,7 +129,7 @@ const TestFace = () => {
   );
 };
 
-export default TestFace;
+export default DetectFace;
 
 const WrapCanvas = styled.canvas`
   width: 100%;

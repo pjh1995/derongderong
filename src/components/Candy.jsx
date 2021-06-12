@@ -3,7 +3,7 @@ import styled, { keyframes, css } from 'styled-components';
 
 import { usePositionContext } from '../Contexts/PositionContext';
 
-const Candy = ({ onRemove, id }) => {
+const Candy = ({ onEating, id }) => {
   const { position } = usePositionContext();
   const candyEl = useRef(null);
 
@@ -15,8 +15,8 @@ const Candy = ({ onRemove, id }) => {
 
   useEffect(() => {
     if (state.cookie < 0) {
-      const height = getRandomArbitrary(50, 550);
-      const left = getRandomArbitrary(50, 750);
+      const height = getRandomArbitrary(200, 400);
+      const left = getRandomArbitrary(200, 600);
       const cookie = getRandomArbitrary(1, 5);
       setstate({
         height,
@@ -35,7 +35,7 @@ const Candy = ({ onRemove, id }) => {
       ) {
         console.log('먹었따!..?');
 
-        onRemove(id);
+        onEating(id);
       }
     }
   }, [position]);

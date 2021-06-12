@@ -1,16 +1,19 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 
 import sound from '../assets/audios/snack_eating_sound.mp3';
 
 import Candy from './Candy';
 
-const CandyList = () => {
+const CandyList = ({ isPlaying }) => {
   const [candyList, setCandyList] = useState([]);
   const [max, setMax] = useState(3000);
+  const audio = new Audio(sound);
+
   let idx = 0;
   useEffect(() => {
+    if (!isPlaying) return false;
     if (candyList.length === 0) makeCandy();
-  }, [candyList, idx, max]);
+  }, [candyList, isPlaying]);
 
   const makeCandy = useCallback(() => {
     if (max <= 0) return false;
@@ -25,18 +28,14 @@ const CandyList = () => {
     }, max);
   }, [candyList, idx, max]);
 
-  const onRemove = (id) => {
+  const onEating = (id) => {
+    if (audio) {
+      audio.play();
+    }
     setCandyList(candyList.filter((candyId) => candyId !== id));
   };
 
-  return (
-    <>
-      <audio tabindex="0" id="beep-one" controls preload="auto">
-        <source src={sound} />
-      </audio>
-      {candyList.length > 0 && candyList.map((id) => <Candy key={id} id={id} onRemove={onRemove} />)}
-    </>
-  );
+  return <>{candyList.length > 0 && candyList.map((id) => <Candy key={id} id={id} onEating={onEating} />)}</>;
 };
 
 export default CandyList;

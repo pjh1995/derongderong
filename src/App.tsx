@@ -1,17 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-import { PositionContextProvider } from './Contexts/PositionContext';
+import { TimeContextProvider } from './Contexts/TimeContext';
 
-import TextFace from './components/TestFace';
-import CandyList from './components/CandyList';
+import Game from './components/Game';
 function App() {
   return (
-    <PositionContextProvider>
-      <div className="App">
-        <TextFace />
-        <CandyList />
-      </div>
-    </PositionContextProvider>
+    <div className="App">
+      <TimeContextProvider>
+        <Game />
+      </TimeContextProvider>
+    </div>
   );
 }
 
