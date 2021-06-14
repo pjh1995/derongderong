@@ -1,12 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { displaySize } from '../assets/constant';
+import { useRecoilValue } from 'recoil';
+import isLoadingState from '../recoil/isLoading';
+import isPlayingState from '../recoil/isPlaying';
 
-const StartButton = ({ onClick, isPlaying, disabled }) => {
+import { displaySize } from '../assets/constant';
+//, isPlaying, isLoading
+
+const StartButton = ({ onClick }) => {
+  const isLoading = useRecoilValue(isLoadingState);
+  const isPlaying = useRecoilValue(isPlayingState);
   return (
     !isPlaying && (
-      <Button onClick={onClick} disabled={disabled}>
+      <Button onClick={onClick} disabled={isLoading}>
         게임 시작
       </Button>
     )

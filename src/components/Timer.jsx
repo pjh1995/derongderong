@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import timeState from '../recoil/time';
+import isLoadingState from '../recoil/isLoading';
 
 const Timer = (props) => {
-  const { isLoading = false, endGame } = props;
+  const { endGame } = props;
+  const isLoading = useRecoilValue(isLoadingState);
   const [time, setTime] = useRecoilState(timeState);
   const [_, setTimer] = useState(null);
 

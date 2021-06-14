@@ -1,17 +1,21 @@
 import React, { useEffect, useState, useCallback } from 'react';
 
-import { useSetRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
 import timeState from '../recoil/time';
+import isPlayingState from '../recoil/isPlaying';
+import scoreState from '../recoil/score';
 
 import sound from '../assets/audios/snack_eating_sound.mp3';
 import { makeCandyDelay } from '../assets/constant';
 
 import Candy from './Candy';
 
-const CandyList = ({ isPlaying, setScore }) => {
+const CandyList = () => {
   const [candyList, setCandyList] = useState([]);
   const [id, setId] = useState(0);
   const setTime = useSetRecoilState(timeState);
+  const isPlaying = useRecoilValue(isPlayingState);
+  const setScore = useSetRecoilState(scoreState);
   const audio = new Audio(sound);
 
   const makeCandy = useCallback(async () => {

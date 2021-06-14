@@ -1,11 +1,11 @@
 import DetectFace from './DetectFace';
 import CandyList from './CandyList';
 
-const PlayGround = ({ setIsLoading, isLoading, isPlaying, setScore }) => {
+const PlayGround = () => {
   return (
     <>
-      <DetectFace setIsLoading={setIsLoading} isLoading={isLoading} />
-      <CandyList isPlaying={isPlaying} setScore={setScore} />
+      <DetectFace />
+      <CandyList />
     </>
   );
 };
