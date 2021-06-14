@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
 
-import { useTimeContext } from '../Contexts/TimeContext';
+import timeState from '../recoil/time';
 
 const Timer = (props) => {
   const { isLoading = false, endGame } = props;
-  const { time, setTime } = useTimeContext();
+  const [time, setTime] = useRecoilState(timeState);
   const [_, setTimer] = useState(null);
 
   const decreaseSeconds = () => {

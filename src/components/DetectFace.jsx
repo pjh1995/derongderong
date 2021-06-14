@@ -4,11 +4,13 @@ import styled from 'styled-components';
 import { displaySize, detectTime } from '../assets/constant';
 
 import * as faceapi from 'face-api.js';
-import { usePositionContext } from '../Contexts/PositionContext';
+
+import { useSetRecoilState } from 'recoil';
+import positionState from '../recoil/position';
 
 const DetectFace = ({ setIsLoading, isLoading }) => {
   // state
-  const { setPosition } = usePositionContext();
+  const setPosition = useSetRecoilState(positionState);
 
   const [st, setSt] = useState({
     position: 'absolute',

@@ -2,10 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 import { displaySize } from '../assets/constant';
-import { usePositionContext } from '../Contexts/PositionContext';
+
+import { useRecoilValue } from 'recoil';
+import positionState from '../recoil/position';
 
 const Candy = ({ onEating, id }) => {
-  const { position } = usePositionContext();
+  const position = useRecoilValue(positionState);
   const candyEl = useRef(null);
 
   const [state, setstate] = useState({
