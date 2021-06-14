@@ -27,7 +27,9 @@ const Candy = ({ onEating, id }) => {
         cookie,
       });
     }
+  });
 
+  useEffect(() => {
     if (candyEl && candyEl.current) {
       if (
         position.min.x <= state.left &&

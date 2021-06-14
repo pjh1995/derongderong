@@ -10,27 +10,33 @@ import Candy from './Candy';
 
 const CandyList = () => {
   const [candyList, setCandyList] = useState([]);
-  const [id, setId] = useState(0);
+
   const setTime = useSetRecoilState(timeState);
   const isPlaying = useRecoilValue(isPlayingState);
   const setScore = useSetRecoilState(scoreState);
+
+  const [id, setId] = useState(0);
+
   const audio = new Audio(sound);
 
-  const makeCandy = useCallback(async () => {
+  useEffect(() => {
+    console.log(isPlaying);
+    if (!isPlaying) return false;
+
+    const makeCandyInterval = setTimeout(() => {
+      makeCandy();
+    }, makeCandyDelay);
+
+    // return clearInterval(makeCandyInterval);
+  }, [id, isPlaying]);
+
+  const makeCandy = async () => {
     await setId(id + 1);
+    console.log('id', id);
     const list = candyList;
     list.push(id);
     setCandyList(list);
-    console.log('list', list);
-    setTimeout(() => {
-      makeCandy();
-    }, makeCandyDelay);
-  }, [candyList]);
-
-  useEffect(() => {
-    if (!isPlaying) return false;
-    if (candyList.length === 0) makeCandy();
-  }, [candyList, isPlaying, makeCandy]);
+  };
 
   const onEating = (id) => {
     if (audio) {
@@ -45,7 +51,12 @@ const CandyList = () => {
     setTime((seconds) => seconds + extra);
   };
 
-  return <>{candyList.length > 0 && candyList.map((id) => <Candy key={id} id={id} onEating={onEating} />)}</>;
+  return (
+    <>
+      <h1>{candyList.length}</h1>
+      {candyList.length > 0 && candyList.map((id) => <Candy key={id} id={id} onEating={onEating} />)}
+    </>
+  );
 };
 
 export default CandyList;
