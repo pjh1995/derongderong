@@ -20,7 +20,7 @@ const CandyList = () => {
   const audio = new Audio(sound);
 
   useEffect(() => {
-    console.log(isPlaying);
+    console.log(isPlaying, id);
     if (!isPlaying) return false;
 
     const makeCandyInterval = setTimeout(() => {

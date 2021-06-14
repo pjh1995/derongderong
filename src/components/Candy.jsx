@@ -17,19 +17,24 @@ const Candy = ({ onEating, id }) => {
   });
 
   useEffect(() => {
-    if (state.cookie < 0) {
-      const height = getRandomArbitrary(200, displaySize.height - 400);
-      const left = getRandomArbitrary(200, displaySize.width - 300);
-      const cookie = getRandomArbitrary(1, 5);
-      setstate({
-        height,
-        left,
-        cookie,
-      });
-    }
+    if (state.cookie < 0) makeCandy();
   });
 
   useEffect(() => {
+    checkCandy();
+  }, [position]);
+
+  function makeCandy() {
+    const height = getRandomArbitrary(200, displaySize.height - 400);
+    const left = getRandomArbitrary(200, displaySize.width - 300);
+    const cookie = getRandomArbitrary(1, 5);
+    setstate({
+      height,
+      left,
+      cookie,
+    });
+  }
+  function checkCandy() {
     if (candyEl && candyEl.current) {
       if (
         position.min.x <= state.left &&
@@ -40,7 +45,7 @@ const Candy = ({ onEating, id }) => {
         onEating(id);
       }
     }
-  }, [position]);
+  }
 
   function getRandomArbitrary(min, max) {
     return Math.floor(Math.random() * (max - 1 - min)) + min;
