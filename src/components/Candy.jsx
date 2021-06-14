@@ -4,7 +4,7 @@ import styled, { keyframes } from 'styled-components';
 import { displaySize } from '../assets/constant';
 
 import { useRecoilValue } from 'recoil';
-import positionState from '../recoil/position';
+import { positionState } from '../recoil';
 
 const Candy = ({ onEating, id }) => {
   const position = useRecoilValue(positionState);

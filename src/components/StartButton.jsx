@@ -2,11 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { useRecoilValue } from 'recoil';
-import isLoadingState from '../recoil/isLoading';
-import isPlayingState from '../recoil/isPlaying';
+import { isLoadingState, isPlayingState } from '../recoil';
 
 import { displaySize } from '../assets/constant';
-//, isPlaying, isLoading
 
 const StartButton = ({ onClick }) => {
   const isLoading = useRecoilValue(isLoadingState);

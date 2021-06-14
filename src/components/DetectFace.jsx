@@ -6,8 +6,7 @@ import { displaySize, detectTime } from '../assets/constant';
 import * as faceapi from 'face-api.js';
 
 import { useSetRecoilState, useRecoilState } from 'recoil';
-import positionState from '../recoil/position';
-import isLoadingState from '../recoil/isLoading';
+import { positionState, isLoadingState } from '../recoil';
 
 const DetectFace = () => {
   // state

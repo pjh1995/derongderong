@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 
 import { useSetRecoilState, useRecoilValue } from 'recoil';
-import timeState from '../recoil/time';
-import isPlayingState from '../recoil/isPlaying';
-import scoreState from '../recoil/score';
+import { timeState, isPlayingState, scoreState } from '../recoil';
 
 import sound from '../assets/audios/snack_eating_sound.mp3';
 import { makeCandyDelay } from '../assets/constant';
