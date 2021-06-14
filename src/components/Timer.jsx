@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-import { timeState, isLoadingState } from '../recoil';
+import { timeState, isLoadingState } from '../store';
 
 const Timer = (props) => {
   const { endGame } = props;

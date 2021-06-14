@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-// import * as tf from '@tensorflow/tfjs';
 import styled from 'styled-components';
 import { displaySize, detectTime } from '../assets/constant';
 
 import * as faceapi from 'face-api.js';
 
 import { useSetRecoilState, useRecoilState } from 'recoil';
-import { positionState, isLoadingState } from '../recoil';
+import { positionState, isLoadingState } from '../store';
 
 const DetectFace = () => {
   // state
@@ -39,8 +38,8 @@ const DetectFace = () => {
   }, []);
 
   const loadFaceApiModels = async () => {
-    console.log('loading faceapi');
-    const modelUrl = 'http://127.0.0.1:8080/models';
+    console.log('loading faceapi', process.env.REACT_APP_IP);
+    const modelUrl = `http://${process.env.REACT_APP_IP}:${process.env.REACT_APP_PORT}/models`;
 
     try {
       await faceapi.loadSsdMobilenetv1Model(modelUrl);

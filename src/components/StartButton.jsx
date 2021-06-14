@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { useRecoilValue } from 'recoil';
-import { isLoadingState, isPlayingState } from '../recoil';
+import { isLoadingState, isPlayingState } from '../store';
 
 import { displaySize } from '../assets/constant';
 

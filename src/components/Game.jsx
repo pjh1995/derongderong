@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
 
-import { isPlayingState, isLoadingState, scoreState } from '../recoil';
+import { isPlayingState, isLoadingState, scoreState } from '../store';
 
 import Timer from './Timer';
 import PlayGround from './PlayGround';

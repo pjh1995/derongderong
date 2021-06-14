@@ -3,11 +3,15 @@ import styled, { keyframes } from 'styled-components';
 
 import { displaySize } from '../assets/constant';
 
-import { useRecoilValue } from 'recoil';
-import { positionState } from '../recoil';
+import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
+import { positionState, timeState, scoreState, candyListState } from '../store';
 
-const Candy = ({ onEating, id }) => {
+const Candy = ({ playAudio, id }) => {
   const position = useRecoilValue(positionState);
+  const setTime = useSetRecoilState(timeState);
+  const setScore = useSetRecoilState(scoreState);
+  const [candyList, setCandyList] = useRecoilState(candyListState);
+
   const candyEl = useRef(null);
 
   const [state, setstate] = useState({
@@ -17,14 +21,16 @@ const Candy = ({ onEating, id }) => {
   });
 
   useEffect(() => {
-    if (state.cookie < 0) makeCandy();
-  });
+    if (state.cookie < 0) {
+      makeCandy();
+    }
+  }, [id]);
 
   useEffect(() => {
     checkCandy();
   }, [position]);
 
-  function makeCandy() {
+  const makeCandy = () => {
     const height = getRandomArbitrary(200, displaySize.height - 400);
     const left = getRandomArbitrary(200, displaySize.width - 300);
     const cookie = getRandomArbitrary(1, 5);
@@ -33,8 +39,8 @@ const Candy = ({ onEating, id }) => {
       left,
       cookie,
     });
-  }
-  function checkCandy() {
+  };
+  const checkCandy = () => {
     if (candyEl && candyEl.current) {
       if (
         position.min.x <= state.left &&
@@ -45,11 +51,22 @@ const Candy = ({ onEating, id }) => {
         onEating(id);
       }
     }
-  }
+  };
 
-  function getRandomArbitrary(min, max) {
+  const getRandomArbitrary = (min, max) => {
     return Math.floor(Math.random() * (max - 1 - min)) + min;
-  }
+  };
+
+  const onEating = (id) => {
+    playAudio();
+    setCandyList(candyList.filter((candyId) => candyId !== id));
+    increaseSeconds(1);
+    setScore((score) => score + 10);
+  };
+
+  const increaseSeconds = (extra) => {
+    setTime((seconds) => seconds + extra);
+  };
 
   return state.cookie > 0 ? (
     <WrapCandy {...state} ref={candyEl}>
