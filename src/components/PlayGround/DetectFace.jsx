@@ -59,16 +59,15 @@ const DetectFace = () => {
       });
   };
 
-  const getMinMax = (positionSet) => {
-    const max = {
-      x: Math.max(...positionSet.map((o) => o.x)),
-      y: Math.max(...positionSet.map((o) => o.y)),
-    };
-    const min = {
-      x: Math.min(...positionSet.map((o) => o.x)),
-      y: Math.min(...positionSet.map((o) => o.y)),
-    };
-    return [max, min];
+  const getMinMaxPosition = (positionSet) => {
+    const lastIndex = positionSet.length - 1;
+
+    function getMinMax(key) {
+      positionSet.sort((a, b) => a[key] - b[key]);
+      return { min: positionSet[0][key], max: positionSet[lastIndex][key] };
+    }
+
+    return { x: getMinMax('x'), y: getMinMax('y') };
   };
 
   const drawDetections = (detections) => {
@@ -84,11 +83,11 @@ const DetectFace = () => {
   const detect = async () => {
     faceapi.matchDimensions(canvasEl.current, displaySize);
 
-    intervalDetectMouth = setInterval(async () => {
+    const detectMouth = async () => {
       const detections = await faceapi
         .detectAllFaces(videoEl.current, new faceapi.TinyFaceDetectorOptions())
-        .withFaceLandmarks()
-        .withFaceExpressions();
+        .withFaceLandmarks();
+
       const landmarks = detections[0]?.landmarks;
 
       if (isLoading) setIsLoading(false);
@@ -97,16 +96,16 @@ const DetectFace = () => {
       drawDetections(detections);
 
       const mouth = landmarks.getMouth();
-      const [max, min] = getMinMax(mouth);
+      const minMaxPosition = getMinMaxPosition(mouth);
 
-      setPosition({ max, min });
-    }, detectTime);
+      setPosition(minMaxPosition);
+    };
+
+    intervalDetectMouth = setInterval(detectMouth, detectTime);
   };
 
   const onPlay = async () => {
     if (videoEl.current && videoEl.current.srcObject) {
-      console.log(videoEl.current.srcObject);
-
       detect();
     }
   };

@@ -49,12 +49,12 @@ const Candy = ({ playAudio, id }) => {
 
     const reverseLeft = displaySize.width - state.left;
 
-    if (
-      position.min.x <= reverseLeft &&
-      reverseLeft <= position.max.x &&
-      position.min.y <= state.height &&
-      state.height <= position.max.y
-    ) {
+    const { x, y } = position;
+
+    const inXRange = x.min <= reverseLeft && reverseLeft <= x.max;
+    const inYRange = y.min <= state.height && state.height <= y.max;
+
+    if (inXRange && inYRange) {
       onEating(id);
     }
   };
