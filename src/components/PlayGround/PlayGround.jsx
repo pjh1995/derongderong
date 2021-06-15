@@ -1,14 +1,14 @@
-import { Suspense } from 'react';
+import { Suspense } from "react";
 
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { candyListState, isPlayingState } from '../store';
+import { useRecoilState, useRecoilValue } from "recoil";
+import { candyListState, isPlayingState } from "../../store";
 
-import DetectFace from './DetectFace';
-import CandyList from './CandyList';
+import DetectFace from "./DetectFace";
+import CandyList from "./CandyList";
 
-import useInterval from '../hooks/useInterval';
+import useInterval from "../../hooks/useInterval";
 
-import { makeCandyDelay } from '../assets/constant';
+import { makeCandyDelay } from "../../assets/constant";
 
 const PlayGround = () => {
   const isPlaying = useRecoilValue(isPlayingState);

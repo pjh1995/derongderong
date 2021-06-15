@@ -1,10 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
-import styled, { keyframes } from 'styled-components';
+import React, { useState, useEffect, useRef } from "react";
+import styled, { keyframes } from "styled-components";
 
-import { displaySize } from '../assets/constant';
+import { displaySize } from "../../assets/constant";
 
-import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
-import { positionState, timeState, scoreState, candyListState } from '../store';
+import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
+import {
+  positionState,
+  timeState,
+  scoreState,
+  candyListState,
+} from "../../store";
 
 const Candy = ({ playAudio, id }) => {
   const position = useRecoilValue(positionState);

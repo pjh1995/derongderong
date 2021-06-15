@@ -1,12 +1,12 @@
-import React from 'react';
-import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
+import React from "react";
+import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil";
 
-import { isPlayingState, isLoadingState, scoreState } from '../store';
+import { isPlayingState, isLoadingState, scoreState } from "../store";
 
-import Timer from './Timer';
-import PlayGround from './PlayGround';
-import StartButton from './StartButton';
-import Score from './Score';
+import Timer from "./Timer";
+import { PlayGround } from "./PlayGround";
+import StartButton from "./StartButton";
+import Score from "./Score";
 
 const Game = () => {
   const setIsLoading = useSetRecoilState(isLoadingState);
@@ -27,7 +27,7 @@ const Game = () => {
   return (
     <>
       <PlayGround />
-      {isPlaying && <Timer initialSeconds="30" endGame={endGame} />}
+      {isPlaying && <Timer endGame={endGame} />}
       {isPlaying && <Score score={score} />}
       <StartButton onClick={onClick} />
     </>
