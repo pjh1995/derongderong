@@ -11,7 +11,7 @@ const StartButton = ({ onClick }) => {
   const isPlaying = useRecoilValue(isPlayingState);
   return (
     !isPlaying && (
-      <Button onClick={onClick} disabled={isLoading}>
+      <Button onClick={onClick} disabled={isLoading || isPlaying}>
         게임 시작
       </Button>
     )

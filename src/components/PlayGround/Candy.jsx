@@ -1,15 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
-import styled, { keyframes } from "styled-components";
+import React, { useState, useEffect, useRef } from 'react';
+import styled, { keyframes } from 'styled-components';
 
-import { displaySize } from "../../assets/constant";
+import { displaySize } from '../../assets/constant';
 
-import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
-import {
-  positionState,
-  timeState,
-  scoreState,
-  candyListState,
-} from "../../store";
+import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
+import { positionState, timeState, scoreState, candyListState } from '../../store';
 
 const Candy = ({ playAudio, id }) => {
   const position = useRecoilValue(positionState);
@@ -26,51 +21,53 @@ const Candy = ({ playAudio, id }) => {
   });
 
   useEffect(() => {
-    if (state.cookie < 0) {
-      makeCandy();
-    }
+    if (state.cookie !== -1) return;
+    makeCandy();
   }, [id]);
 
   useEffect(() => {
     checkCandy();
   }, [position]);
 
+  const getRandom = (min, max) => {
+    return Math.floor(Math.random() * (max - 1 - min)) + min;
+  };
+
   const makeCandy = () => {
-    const height = getRandomArbitrary(200, displaySize.height - 400);
-    const left = getRandomArbitrary(200, displaySize.width - 300);
-    const cookie = getRandomArbitrary(1, 5);
+    const height = getRandom(200, displaySize.height - 200);
+    const left = getRandom(200, displaySize.width - 200);
+    const cookie = getRandom(1, 5);
     setstate({
       height,
       left,
       cookie,
     });
   };
+
   const checkCandy = () => {
-    if (candyEl && candyEl.current) {
-      if (
-        position.min.x <= state.left &&
-        state.left <= position.max.x &&
-        position.min.y <= state.height &&
-        state.height <= position.max.y
-      ) {
-        onEating(id);
-      }
+    if (!candyEl?.current) return;
+
+    const reverseLeft = displaySize.width - state.left;
+
+    if (
+      position.min.x <= reverseLeft &&
+      reverseLeft <= position.max.x &&
+      position.min.y <= state.height &&
+      state.height <= position.max.y
+    ) {
+      onEating(id);
     }
-  };
-
-  const getRandomArbitrary = (min, max) => {
-    return Math.floor(Math.random() * (max - 1 - min)) + min;
-  };
-
-  const onEating = (id) => {
-    playAudio();
-    setCandyList(candyList.filter((candyId) => candyId !== id));
-    increaseSeconds(1);
-    setScore((score) => score + 10);
   };
 
   const increaseSeconds = (extra) => {
     setTime((seconds) => seconds + extra);
+  };
+
+  const onEating = (id) => {
+    playAudio();
+    setScore((score) => score + 10);
+    setCandyList(candyList.filter((candyId) => candyId !== id));
+    increaseSeconds(1);
   };
 
   return state.cookie > 0 ? (

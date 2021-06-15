@@ -1,31 +1,23 @@
-import React, { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
-import { displaySize, detectTime } from "../../assets/constant";
+import React, { useEffect, useRef } from 'react';
+import styled from 'styled-components';
+import { displaySize, detectTime } from '../../assets/constant';
 
-import * as faceapi from "face-api.js";
+import * as faceapi from 'face-api.js';
 
-import { useSetRecoilState, useRecoilState } from "recoil";
-import { positionState, isLoadingState } from "../../store";
+import { useSetRecoilState, useRecoilState } from 'recoil';
+import { positionState, isLoadingState } from '../../store';
 
 const DetectFace = () => {
   // state
   const setPosition = useSetRecoilState(positionState);
   const [isLoading, setIsLoading] = useRecoilState(isLoadingState);
 
-  const [st, setSt] = useState({
-    position: "absolute",
-    backgroundColor: "red",
-    transform: "rotateY(180deg)",
-    top: "-999px",
-    left: "-999px",
-    width: "0",
-    height: "0",
-  });
   // refs
   const videoEl = useRef(null);
   const canvasEl = useRef(null);
 
-  let detectMouth = null;
+  let intervalDetectMouth = null;
+
   // effects
   useEffect(() => {
     async function load() {
@@ -34,11 +26,11 @@ const DetectFace = () => {
       });
     }
     load();
-    return clearInterval(detectMouth);
+    return clearInterval(intervalDetectMouth);
   }, []);
 
   const loadFaceApiModels = async () => {
-    console.log("loading faceapi", process.env.REACT_APP_IP);
+    console.log('loading faceapi', process.env.REACT_APP_IP);
     const modelUrl = `http://${process.env.REACT_APP_IP}:${process.env.REACT_APP_PORT}/models`;
 
     try {
@@ -51,7 +43,7 @@ const DetectFace = () => {
       return;
     }
 
-    console.log("loaded faceapi");
+    console.log('loaded faceapi');
   };
 
   const loadCam = () => {
@@ -79,26 +71,20 @@ const DetectFace = () => {
     return [max, min];
   };
 
-  const drawDetections = (canvas, detections) => {
+  const drawDetections = (detections) => {
     const resizedDetections = faceapi.resizeResults(detections, displaySize);
 
-    if (canvas) {
-      canvas
-        .getContext("2d")
-        .clearRect(0, 0, displaySize.width, displaySize.height);
-      faceapi.draw.drawDetections(canvas, resizedDetections);
-      faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+    if (canvasEl?.current) {
+      canvasEl.current.getContext('2d').clearRect(0, 0, displaySize.width, displaySize.height);
+      faceapi.draw.drawDetections(canvasEl.current, resizedDetections);
+      faceapi.draw.drawFaceLandmarks(canvasEl.current, resizedDetections);
     }
   };
 
   const detect = async () => {
-    const canvas = faceapi.createCanvasFromMedia(videoEl.current);
-    canvas.style.cssText = "position:fixed; top:0; left: 0;";
-    document.body.append(canvas);
+    faceapi.matchDimensions(canvasEl.current, displaySize);
 
-    faceapi.matchDimensions(canvas, displaySize);
-
-    detectMouth = setInterval(async () => {
+    intervalDetectMouth = setInterval(async () => {
       const detections = await faceapi
         .detectAllFaces(videoEl.current, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks()
@@ -108,18 +94,10 @@ const DetectFace = () => {
       if (isLoading) setIsLoading(false);
       if (!landmarks) return;
 
-      drawDetections(canvas, detections);
+      drawDetections(detections);
 
       const mouth = landmarks.getMouth();
       const [max, min] = getMinMax(mouth);
-
-      setSt({
-        ...st,
-        top: `${max.y}px`,
-        left: `${min.x}px`,
-        width: `${max.x - min.x}px`,
-        height: `${max.y - min.y}px`,
-      });
 
       setPosition({ max, min });
     }, detectTime);
@@ -135,16 +113,8 @@ const DetectFace = () => {
 
   return (
     <WrapDetectFace>
-      <WrapVideo
-        ref={videoEl}
-        id="idid"
-        onPlay={onPlay}
-        muted
-        playsInline
-        autoPlay
-      />
-      <WrapCanvas id="capture" ref={canvasEl}></WrapCanvas>
-      <div style={st}>sss</div>
+      <WrapVideo ref={videoEl} onPlay={onPlay} muted playsInline autoPlay />
+      <WrapCanvas id="capture" ref={canvasEl} width={displaySize.width} height={displaySize.height}></WrapCanvas>
     </WrapDetectFace>
   );
 };
@@ -154,16 +124,16 @@ export default DetectFace;
 const WrapDetectFace = styled.div`
   width: ${displaySize.width}px;
   height: ${displaySize.height}px;
-  position: "relative";
+  position: relative;
+  transform: rotateY(-180deg);
 `;
 
 const WrapCanvas = styled.canvas`
-  width: 100%;
-  height: 100%;
   position: absolute;
   left: 0;
   top: 0;
 `;
+
 const WrapVideo = styled.video`
   width: 100%;
   height: 100%;
