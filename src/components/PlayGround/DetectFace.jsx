@@ -34,11 +34,8 @@ const DetectFace = () => {
     const modelUrl = `http://${process.env.REACT_APP_IP}:${process.env.REACT_APP_PORT}/models`;
 
     try {
-      await faceapi.loadSsdMobilenetv1Model(modelUrl);
       await faceapi.loadFaceLandmarkModel(modelUrl);
       await faceapi.loadTinyFaceDetectorModel(modelUrl);
-      await faceapi.loadAgeGenderModel(modelUrl);
-      await faceapi.loadFaceExpressionModel(modelUrl);
     } catch (e) {
       return;
     }
@@ -81,7 +78,7 @@ const DetectFace = () => {
   };
 
   const detect = async () => {
-    faceapi.matchDimensions(canvasEl.current, displaySize);
+    // faceapi.matchDimensions(canvasEl.current, displaySize);
 
     const detectMouth = async () => {
       const detections = await faceapi
@@ -93,7 +90,7 @@ const DetectFace = () => {
       if (isLoading) setIsLoading(false);
       if (!landmarks) return;
 
-      drawDetections(detections);
+      drawDetections(detections); // 생략 가능,
 
       const mouth = landmarks.getMouth();
       const minMaxPosition = getMinMaxPosition(mouth);

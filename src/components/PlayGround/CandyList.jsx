@@ -1,11 +1,11 @@
-import React, { Suspense } from "react";
+import React, { Suspense } from 'react';
 
-import { useRecoilValue } from "recoil";
-import { candyListState } from "../../store";
+import { useRecoilValue } from 'recoil';
+import { candyListState } from '../../store';
 
-import sound from "../../assets/audios/snack_eating_sound.mp3";
+import sound from '../../assets/audios/snack_eating_sound.mp3';
 
-import Candy from "./Candy";
+import Candy from './Candy';
 
 const CandyList = () => {
   const candyList = useRecoilValue(candyListState);

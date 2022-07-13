@@ -4,9 +4,10 @@ import styled, { keyframes } from 'styled-components';
 import { displaySize } from '../../assets/constant';
 
 import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
-import { positionState, timeState, scoreState, candyListState } from '../../store';
+import { positionState, timeState, scoreState, candyListState, isPlayingState } from '../../store';
 
 const Candy = ({ playAudio, id }) => {
+  const isPlaying = useRecoilValue(isPlayingState);
   const position = useRecoilValue(positionState);
   const setTime = useSetRecoilState(timeState);
   const setScore = useSetRecoilState(scoreState);
@@ -26,6 +27,7 @@ const Candy = ({ playAudio, id }) => {
   }, [id]);
 
   useEffect(() => {
+    if (!isPlaying) return;
     checkCandy();
   }, [position]);
 
@@ -65,9 +67,9 @@ const Candy = ({ playAudio, id }) => {
 
   const onEating = (id) => {
     playAudio();
-    setScore((score) => score + 10);
     setCandyList(candyList.filter((candyId) => candyId !== id));
     increaseSeconds(1);
+    setScore((score) => score + 10);
   };
 
   return state.cookie > 0 ? (
